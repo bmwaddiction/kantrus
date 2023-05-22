@@ -1,6 +1,6 @@
 # SERVER
 
-To start the project run `source myenv/bin/activate` from server/kantrus_command_center
+python main.py
 
 # Getting Started with Create React App
 
