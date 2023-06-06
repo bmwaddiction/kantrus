@@ -8,14 +8,13 @@ from sqlalchemy.orm import Session
 import uvicorn
 from typing import List
 from api import apiRouter as ApiRouter
+from api.openai import openai as OpenAiRouter
 
 app = FastAPI(
     title="Kantrus",
     description="Kantrus Server",
     version="1.0.0",
 )
-
-
 
 users.Base.metadata.create_all(bind=engine)
 
@@ -25,6 +24,8 @@ def validation_exception_handler(request, err):
     return JSONResponse(status_code=400, content={"message": f"{base_error_message}. Detail: {err}"})
 
 app.include_router(ApiRouter.apiRouter)
+# this should always be the last route
+app.include_router(OpenAiRouter.router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", port=9000, reload=True)
