@@ -1,5 +1,6 @@
 
-from sqlalchemy.orm import Session
+import uuid
+from sqlalchemy.orm import Session,defer,load_only
 
 from models.users import Users as User
 
@@ -7,8 +8,9 @@ class UserRepo:
 
  async def create(db: Session, user: User):
       db_user = User(
+          id=str(uuid.uuid4()),
           email=user.email,
-          hashed_password=user.hashed_password,
+          password=user.password,
           is_active=user.is_active
         )
       db.add(db_user)
@@ -17,10 +19,10 @@ class UserRepo:
       return db_user
 
  def fetch_by_id(db: Session,_id):
-     return db.query(User).filter(User.id == _id).first()
+    return db.query(User).filter(User.id == _id).first()
 
  def fetch_by_email(db: Session,email):
-     return db.query(User).filter(User.email == email).first()
+    return db.query(User).filter(User.email == email).first()
 
  def fetch_all(db: Session, skip: int = 0, limit: int = 100):
      return db.query(User).offset(skip).limit(limit).all()
